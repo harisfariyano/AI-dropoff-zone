@@ -28,7 +28,7 @@
         <ul class="navbar-nav bg-gradient-yuhu sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon">
                     <img src="../static/img/logokai_main.png" alt="gambar logo">
                 </div>
@@ -39,7 +39,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="dashboard.html">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -63,7 +63,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Laporan Kustom:</h6>
-                        <a class="collapse-item active" href="laporan-trafik.html">Laporan Trafik</a>
+                        <a class="collapse-item active" href="{{ url_for('data') }}">Laporan Trafik</a>
                     </div>
                 </div>
             </li>
@@ -276,7 +276,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="{{ url_for('index') }}">Logout</a>
                 </div>
             </div>
         </div>

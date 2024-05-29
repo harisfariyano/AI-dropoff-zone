@@ -45,7 +45,7 @@ def detect_and_track_cars(frame, model, zone, active_cars, timers, alarms):
     current_time = time.time()
 
     # Draw the zone
-    # cv2.polylines(frame, [np.array(zone, np.int32)], isClosed=True, color=(255, 0, 0), thickness=2)
+    # cv2.polylines(frame, [np.array(zone, np.int32)], isClosed=True, color=(255, 0, 0, 10), thickness=2)
 
     for i, (x, y, w, h) in enumerate(tracked_objects):
         car_id = int(ids[i])  # Use the tracking ID provided by the tracker
@@ -84,7 +84,7 @@ def detect_and_track_cars(frame, model, zone, active_cars, timers, alarms):
         if car_id in car_dict:
             cv2.putText(frame, car_dict[car_id], (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
             # cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.circle(frame, (center_x, center_y), 3, (0, 0, 255), -1)  # Draw a red point at the center
+            cv2.circle(frame, (center_x, center_y), 5, (0, 0, 255), -1)  # Draw a red point at the center
 
     # Remove cars that are no longer detected
     for car_id in list(car_dict.keys()):
@@ -112,7 +112,7 @@ timers = {}
 alarms = {}
 
 # Capture video from a file or camera
-cap = cv2.VideoCapture('video/c2.mp4')  # or use 0 for webcam
+cap = cv2.VideoCapture('c2.mp4')  # or use 0 for webcam
 
 # Set window size
 window_width, window_height = 800, 600
