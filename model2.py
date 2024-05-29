@@ -6,7 +6,7 @@ import pygame
 
 # Initialize pygame for playing the alarm sound
 pygame.mixer.init()
-alarm_sound = 'alarm.mp3'
+alarm_sound = 'static/alarm/alarm.mp3'
 
 # Load the YOLOv8 model with tracking support
 model = YOLO('model/031924.pt')
@@ -112,7 +112,7 @@ timers = {}
 alarms = {}
 
 # Capture video from a file or camera
-cap = cv2.VideoCapture('c2.mp4')  # or use 0 for webcam
+cap = cv2.VideoCapture('static/video/c2.mp4')  # or use 0 for webcam
 
 # Set window size
 window_width, window_height = 800, 600
