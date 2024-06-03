@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Your Twilio Account SID and Auth Token
 ACCOUNT_SID = 'AC1af84a1009b422795b581eabd435361d'
 AUTH_TOKEN = '78d805d82a9fe135ad3e9ffc34d8ac51'
-TWILIO_PHONE_NUMBER = 'whatsapp:+13256664471'  # Twilio Sandbox WhatsApp number
+TWILIO_PHONE_NUMBER = 'whatsapp:+14155238886'  # Twilio Sandbox WhatsApp number
 
 client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
