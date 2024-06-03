@@ -5,9 +5,9 @@ from twilio.base.exceptions import TwilioRestException
 app = Flask(__name__)
 
 # Your Twilio Account SID and Auth Token
-ACCOUNT_SID = 'AC1af84a1009b422795b581eabd435361d'
-AUTH_TOKEN = '78d805d82a9fe135ad3e9ffc34d8ac51'
-TWILIO_PHONE_NUMBER = '+13256664471'  # Your Twilio phone number
+ACCOUNT_SID = ''
+AUTH_TOKEN = ''
+TWILIO_PHONE_NUMBER = '+'  # Your Twilio phone number
 
 client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
