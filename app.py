@@ -1,7 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, Response
+from werkzeug.utils import secure_filename
 from flask_mysqldb import MySQL
+import os
 import secrets
 import bcrypt  # Untuk hashing password
+import cv2
+from ultralytics import YOLO
+# Import model-related functions but do not initialize anything yet
+from model import detect_and_track_cars
 
 app = Flask(__name__)
 
@@ -15,12 +21,83 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'dropoffzone'
 
 mysql = MySQL(app)
+app.config['UPLOAD_FOLDER'] = 'static/videos'
+
+cap = None  # Global variable to hold video capture object
+model = None  # Global variable to hold model
 
 # Clear session on each request to ensure proper initialization
 @app.route('/')
 def index():
     session.clear()
     return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'videoFile' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['videoFile']
+    
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    
+    if file:
+        filename = secure_filename(file.filename)
+        input_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(input_path)
+        
+        global cap
+        global model
+
+        # Initialize video capture object
+        cap = cv2.VideoCapture(input_path)  
+        
+        # Initialize the model if not already initialized
+        if model is None:
+            
+            model = YOLO('model/031924.pt')
+
+        return jsonify({'video_url': '/video_feed'}), 200
+
+    return jsonify({'error': 'File processing failed'}), 500
+
+def generate_frames():
+    global cap
+    if not cap.isOpened():
+        return
+
+    # Define the dropoff zone coordinates
+    zone = [(690, 380), (750, 390), (640, 475), (530, 460)]
+
+    # Set of active car IDs that are currently in the zone
+    active_cars = set()
+
+    # Dictionary to hold start time for each car
+    timers = {}
+
+    # Dictionary to track alarm status for each car
+    alarms = {}
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        frame = detect_and_track_cars(frame, model, zone, active_cars, timers, alarms)
+
+        # Encode the frame in JPEG format
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+    cap.release()
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Route for logout
 @app.route('/logout')

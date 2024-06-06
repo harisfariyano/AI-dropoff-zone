@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -204,7 +203,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
                                 <img class="img-profile rounded-circle" src="../static/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -219,7 +218,8 @@
                                     Settings
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal"
+                                    data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -237,26 +237,32 @@
                     <h1 class="h3 mb-4 text-gray-800">AI DROPOFF ZONE</h1>
 
                     <div class="row">
-
                         <div class="col-lg-10">
-
                             <!-- Bar Chart -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Recorder</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">PROCESSED CCTV</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="chart-bar">
-                                        <canvas id=""></canvas>
+                                    <form id="upload-form" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <label for="videoFile">Upload Video</label>
+                                            <input type="file" class="form-control-file" id="videoFile" name="videoFile"
+                                            accept="video/*" required>
+                                            
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+                                    <hr>
+                                    <!-- <h3>Processed CCTV</h3> -->
+                                    <div id="video-container" style="display: none;">
+                                        <img id="processedVideo" style="width: 800px; height: 600px;">
                                     </div>
                                     <hr>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
                 <!-- /.container-fluid -->
 
@@ -298,7 +304,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="{{ url_for('index') }}">Logout</a>
+                    <a class="btn btn-primary" href="{{ url_for('dashboard') }}">Logout</a>
                 </div>
             </div>
         </div>
@@ -316,6 +322,29 @@
 
     <!-- Page level plugins -->
     <script src="../static/vendor/chart.js/Chart.min.js"></script>
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            const videoFile = document.getElementById('videoFile').files[0];
+            formData.append('videoFile', videoFile);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const videoContainer = document.getElementById('video-container');
+                const processedVideo = document.getElementById('processedVideo');
+                processedVideo.src = data.video_url;
+                videoContainer.style.display = 'block';
+            } else {
+                alert('Failed to upload and process video.');
+            }
+        });
+    </script>
 
 </body>
 

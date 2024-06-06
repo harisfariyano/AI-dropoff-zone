@@ -1,13 +1,17 @@
 from flask import Flask, request, jsonify
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
+load_dotenv()
+
 # Your Twilio Account SID and Auth Token
-ACCOUNT_SID = 'AC1af84a1009b422795b581eabd435361d'
-AUTH_TOKEN = '78d805d82a9fe135ad3e9ffc34d8ac51'
-TWILIO_PHONE_NUMBER = 'whatsapp:+14155238886'  # Twilio Sandbox WhatsApp number
+ACCOUNT_SID = os.getenv('ACCOUNT_SID')
+AUTH_TOKEN = os.getenv('AUTH_TOKEN_WA')
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER_WA')  # Twilio Sandbox WhatsApp number
 
 client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
